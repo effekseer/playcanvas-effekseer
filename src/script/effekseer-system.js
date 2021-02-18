@@ -5,15 +5,12 @@ effekseerWasmAssets = pc.Application.getApplication().assets.findAll("effekseer.
 effekseerWasmLoadingEvents = []
 effekseerWasmLoaded = false;
 
-//var b = pc.Application.getApplication().graphicsDevice.gl["bindVertexArray"];
-
 if(effekseerWasmAssets.length > 0)
 {
     effekseer.initRuntime(effekseerWasmAssets[0].getFileUrl(), () => {
         var gl = pc.Application.getApplication().graphicsDevice.gl;
         
-  //      pc.Application.getApplication().graphicsDevice.gl["bindVertexArray"] = b;
-        effekseer_wasm_loaded = true;
+        effekseerWasmLoaded = true;
         for(var i = 0; i < effekseerWasmLoadingEvents.length; i++)
         {
             effekseerWasmLoadingEvents[i]();        
@@ -42,7 +39,7 @@ class EffekseerContext
         
         addEffekseerWasmLoadingEvent(() => {
             this.context = effekseer.createContext();     
-            this.context.init(app.graphicsDevice.gl); 
+            this.context.init(app.graphicsDevice.gl, {enableExtensionsByDefault : false}); 
             this.loaded = true;    
             for(var i = 0; i < this._events.length; i++)
             {
