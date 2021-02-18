@@ -42,7 +42,7 @@ var effekseer = function () {
   var _onRuntimeInitialized = function _onRuntimeInitialized() {
     // C++ functions
     Core = {
-      Init: Module.cwrap("EffekseerInit", "number", ["number", "number"]),
+      Init: Module.cwrap("EffekseerInit", "number", ["number", "number", "number"]),
       Terminate: Module.cwrap("EffekseerTerminate", "void", ["number"]),
       Update: Module.cwrap("EffekseerUpdate", "void", ["number", "number"]),
       BeginUpdate: Module.cwrap("EffekseerBeginUpdate", "void", ["number"]),
@@ -623,7 +623,7 @@ var effekseer = function () {
 
         // Initializes Effekseer core.
         this.contextStates.save();
-        this.nativeptr = Core.Init(instanceMaxCount, squareMaxCount);
+        this.nativeptr = Core.Init(instanceMaxCount, squareMaxCount, enableExtensionsByDefault);
         this.contextStates.restore();
       }
 
