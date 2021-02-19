@@ -1,15 +1,82 @@
 /*jshint esversion: 6, asi: true, laxbreak: true*/
 
-class PlayCanvasEffekseerSystem
+effekseerWasmAssets = pc.Application.getApplication().assets.findAll("effekseer_native.wasm"); 
+
+effekseerWasmLoadingEvents = []
+effekseerWasmLoaded = false;
+
+if(effekseerWasmAssets.length > 0)
+{
+    effekseer.initRuntime(effekseerWasmAssets[0].getFileUrl(), () => {
+        var gl = pc.Application.getApplication().graphicsDevice.gl;
+        
+        effekseerWasmLoaded = true;
+        for(var i = 0; i < effekseerWasmLoadingEvents.length; i++)
+        {
+            effekseerWasmLoadingEvents[i]();        
+        }
+    });
+}
+
+function addEffekseerWasmLoadingEvent(f)
+{
+    if(effekseerWasmLoaded)
+    {
+        f();        
+    }
+    else
+    {
+       effekseerWasmLoadingEvents.push(f);        
+    }
+}
+
+class EffekseerContext
 {
     constructor(app) {
-        this.context = effekseer.createContext();     
-        this.context.init(app.graphicsDevice.gl); 
+        this.context = null;
+        this.loaded = false;
+        this._events = [];
+        
+        addEffekseerWasmLoadingEvent(() => {
+            this.context = effekseer.createContext();     
+            this.context.init(app.graphicsDevice.gl, {enableExtensionsByDefault : false}); 
+            this.loaded = true;    
+            for(var i = 0; i < this._events.length; i++)
+            {
+                this._events[i](this);       
+            }
+        });
     }
     
     release()
     {
-        effekseer.releaseContext(this.context);
+        addEffekseerWasmLoadingEvent(() => {
+            effekseer.releaseContext(this.context);
+        });
+    }
+    
+    addEvent(f)
+    {
+        if(this.loaded)
+        {
+            f(this);        
+        }
+        else
+        {
+            this._events.push(f);            
+        }
+    }
+}
+
+class PlayCanvasEffekseerSystem
+{
+    constructor(app) {
+        this.context = new EffekseerContext(app);
+    }
+    
+    release()
+    {
+        this.context.release();
     }
 }
 
@@ -43,7 +110,10 @@ EffekseerSystem.prototype.initialize = function() {
     var layer = new pc.Layer({
         name : "effekseerlayer",
             onPostRenderTransparent : function (camerapass) {
-                window.playCanvasEffekseerSystem.context.draw();
+                if(window.playCanvasEffekseerSystem.context.loaded)
+                {
+                    window.playCanvasEffekseerSystem.context.context.draw();                        
+                }
             }
         });
     
@@ -67,8 +137,11 @@ EffekseerSystem.prototype.initialize = function() {
 
 EffekseerSystem.prototype.update = function(dt) {
     var context = window.playCanvasEffekseerSystem.context;
-    var camera = this.app.root.findByName('camera').camera;
-    context.update();
-    context.setProjectionMatrix(camera.projectionMatrix.data);
-    context.setCameraMatrix(camera.viewMatrix.data);
+    if(context.loaded)
+    {
+        var camera = this.app.root.findByName('camera').camera;
+        context.context.update();
+        context.context.setProjectionMatrix(camera.projectionMatrix.data);
+        context.context.setCameraMatrix(camera.viewMatrix.data);    
+    }
 };

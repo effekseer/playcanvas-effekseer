@@ -26,18 +26,32 @@ EffekseerEmitter.prototype.initialize = function() {
     {
         theApp = this.app;
         var redirectFuc = function redirect(src) {
+            console.log(src);
             var srcs = src.split('/');
             var filename = srcs[srcs.length-1];
-            var asset = theApp.assets.find(filename);
-            if(!asset) return src;
-            return asset.getFileUrl();
+            var assets = theApp.assets.findAll(filename); 
+            
+            if(assets.length === 0) return src;
+            
+            for(var i = 0; i < assets.length; i += 1)
+            {
+                var url = assets[i].getFileUrl();
+                if(url.includes(src))
+                {
+                    return url;
+                }
+            }
+            return src;
         };
 
 
         console.log(this.effect);
         console.log(this.effect.getFileUrl());
         var context = window.playCanvasEffekseerSystem.context;
-        this.effekseer_effect = context.loadEffect(this.effect.getFileUrl(), this.scale, () => {}, () => {}, redirectFuc);
+        
+        context.addEvent((c) => {
+            this.effekseer_effect = c.context.loadEffect(this.effect.getFileUrl(), this.scale, () => {}, () => {}, redirectFuc);
+        });
     }
     
     // TODO : it is better to wait or find effekseer system
@@ -79,7 +93,7 @@ EffekseerEmitter.prototype.play = function() {
 
     var f = function () { 
         var context = window.playCanvasEffekseerSystem.context;
-        var handle = context.play(this.effekseer_effect, 0, 0, 0);
+        var handle = context.context.play(this.effekseer_effect, 0, 0, 0);
         var transform = this.entity.getWorldTransform();
         handle.setMatrix(Array.prototype.slice.call(transform.data));
         this._handles.push(handle);
