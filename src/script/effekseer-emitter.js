@@ -52,6 +52,11 @@ EffekseerEmitter.prototype.initialize = function() {
     
     // TODO : it is better to wait or find effekseer system
     this.on("destroy", function () {
+        if(this.effekseer_effect.isLoaded) {
+            var context = window.playCanvasEffekseerSystem.context;
+            var handle = context.context.releaseEffect(this.effekseer_effect);
+            this.effekseer_effect = null;
+        }
         window.deletePlayCanvasEffekseerSystem();
     });
     
