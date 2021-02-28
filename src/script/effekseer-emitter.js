@@ -26,7 +26,6 @@ EffekseerEmitter.prototype.initialize = function() {
     {
         theApp = this.app;
         var redirectFuc = function redirect(src) {
-            console.log(src);
             var srcs = src.split('/');
             var filename = srcs[srcs.length-1];
             var assets = theApp.assets.findAll(filename); 
@@ -36,10 +35,7 @@ EffekseerEmitter.prototype.initialize = function() {
             for(var i = 0; i < assets.length; i += 1)
             {
                 var url = assets[i].getFileUrl();
-                if(url.includes(src))
-                {
-                    return url;
-                }
+                return url;
             }
             return src;
         };
