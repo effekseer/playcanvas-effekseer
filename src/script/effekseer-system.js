@@ -133,6 +133,8 @@ EffekseerSystem.prototype.initialize = function() {
     this.on("destroy", function () {
         window.deletePlayCanvasEffekseerSystem();
     });
+    
+    this._restTime = 0.0;
 };
 
 EffekseerSystem.prototype.update = function(dt) {
@@ -140,7 +142,12 @@ EffekseerSystem.prototype.update = function(dt) {
     if(context.loaded)
     {
         var camera = this.app.root.findByName('camera').camera;
-        context.context.update();
+        this._restTime += dt;
+        
+        while(this._restTime >= 1.0 / 60.0) {
+            context.context.update(1);
+            this._restTime -= 1.0 / 60.0;
+        }
         context.context.setProjectionMatrix(camera.projectionMatrix.data);
         context.context.setCameraMatrix(camera.viewMatrix.data);    
     }
