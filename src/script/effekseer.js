@@ -1,5 +1,5 @@
 /*!
- *  Effekseer for WebGL v1.62a
+ *  Effekseer for WebGL v1.62b
  *  https://github.com/effekseer/EffekseerForWebGL
  *
  *  This software is licensed under the MIT License.
@@ -36,7 +36,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var effekseer = function () {
   var Module = {};
   var Core = {};
-  var _imageCrossOrigin = "use-credentials";
+  var _imageCrossOrigin = "";
   var _onloadAssembly = function _onloadAssembly() {};
   var _onerrorAssembly = function _onerrorAssembly() {};
   var _is_runtime_initialized = false;
