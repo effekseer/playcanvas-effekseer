@@ -1,6 +1,13 @@
 /*jshint esversion: 6, asi: true, laxbreak: true*/
 
-effekseerWasmAssets = pc.Application.getApplication().assets.findAll("effekseer_native.wasm"); 
+if(pc.Application.getApplication() === undefined)
+{
+    effekseerWasmAssets = [];
+}
+else
+{
+    effekseerWasmAssets = pc.Application.getApplication().assets.findAll("effekseer_native.wasm"); 
+} 
 
 effekseerWasmLoadingEvents = []
 effekseerWasmLoaded = false;
