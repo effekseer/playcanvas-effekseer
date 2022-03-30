@@ -18,7 +18,7 @@ Add entities
 
 ![](docs/images/AddEntity.png)
 
-Add EffekseerSystem to an entity
+Add EffekseerSystem to an entity. Set the Entity of the camera to the Camera attribute.
 
 ![](docs/images/EffekseerSyatemScript.png)
 
