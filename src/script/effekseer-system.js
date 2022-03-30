@@ -110,6 +110,10 @@ window.deletePlayCanvasEffekseerSystem = function() {
 
 var EffekseerSystem = pc.createScript('effekseerSystem');
 
+EffekseerSystem.attributes.add("Camera",  {
+    type: 'entity'
+});
+
 EffekseerSystem.prototype.initialize = function() {
     
     window.createPlayCanvasEffekseerSystem(this.app);
@@ -133,7 +137,7 @@ EffekseerSystem.prototype.initialize = function() {
     
      
     // add layer to a camera
-    var camera = this.app.root.findByName('camera').camera;
+    var camera = this.Camera.camera;
     var layers = camera.layers.concat();
     layers.push(layer.id);
     camera.layers = layers;
@@ -149,7 +153,7 @@ EffekseerSystem.prototype.update = function(dt) {
     var context = window.playCanvasEffekseerSystem.context;
     if(context.loaded)
     {
-        var camera = this.app.root.findByName('camera').camera;
+        var camera = this.Camera.camera;
         this._restTime += dt;
         
         while(this._restTime >= 1.0 / 60.0) {
