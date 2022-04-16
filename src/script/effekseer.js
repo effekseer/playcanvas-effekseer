@@ -1,5 +1,5 @@
 /*!
- *  Effekseer for WebGL v1.62c
+ *  Effekseer for WebGL v1.62d
  *  https://github.com/effekseer/EffekseerForWebGL
  *
  *  This software is licensed under the MIT License.
@@ -618,6 +618,21 @@ var effekseer = function () {
     }
 
     _createClass(ContextStates, [{
+      key: "release",
+      value: function release() {
+        if (this.effekseer_vao) {
+          if (this.ext_vao) {
+            this.ext_vao.deleteVertexArrayOES(this.effekseer_vao);
+          } else if (this.isWebGL2VAOEnabled) {
+            this.gl.deleteVertexArray(this.effekseer_vao);
+          }
+
+          this.effekseer_vao = null;
+        }
+
+        this.gl = null;
+      }
+    }, {
       key: "save",
       value: function save() {
         // glGetIntegerv(GL_ELEMENT_ARRAY_BUFFER_BINDING) is wrong with Emscripten (Why?)
@@ -1198,6 +1213,14 @@ var effekseer = function () {
     }, {
       key: "releaseContext",
       value: function releaseContext(context) {
+        if (context.contextStates) {
+          context.contextStates.release();
+        }
+
+        if (context.gl) {
+          context.gl = null;
+        }
+
         if (context.nativeptr == null) {
           return;
         }
@@ -1211,8 +1234,8 @@ var effekseer = function () {
        */
 
     }, {
-      key: "setSetLogEnabled",
-      value: function setSetLogEnabled(flag) {
+      key: "setLogEnabled",
+      value: function setLogEnabled(flag) {
         Core.SetLogEnabled(flag);
       }
 
