@@ -1,5 +1,5 @@
 /*!
- *  Effekseer for WebGL v1.70a
+ *  Effekseer for WebGL v1.70b
  *  https://github.com/effekseer/EffekseerForWebGL
  *
  *  This software is licensed under the MIT License.
@@ -381,18 +381,13 @@ var effekseer = function () {
        */
 
     }, {
-      key: "exists",
-      get: function get() {
-        return !!Core.Exists(this.context.nativeptr, this.native);
-      }
+      key: "setFrame",
+
 
       /**
        * Set frame of this effect instance.
        * @param {number} frame Frame of this effect instance.
        */
-
-    }, {
-      key: "setFrame",
       value: function setFrame(frame) {
         Core.SetFrame(this.context.nativeptr, this.native, frame);
       }
@@ -557,6 +552,11 @@ var effekseer = function () {
       key: "setRandomSeed",
       value: function setRandomSeed(seed) {
         Core.SetRandomSeed(this.context.nativeptr, this.native, seed);
+      }
+    }, {
+      key: "exists",
+      get: function get() {
+        return !!Core.Exists(this.context.nativeptr, this.native);
       }
     }]);
 
