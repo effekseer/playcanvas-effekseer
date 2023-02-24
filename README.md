@@ -48,12 +48,23 @@ effekseer.wasm -> effekseer_native.wasm
 
 - Fix code
 
-```
-effekseer_native(params).then(function (module) {
-```
-
-to
+Get a module directly
 
 ```
-effekseer_nativeLib(params).then(function (module) {
+  var _initalize_wasm = function _initalize_wasm(url) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', url, true);
+    xhr.responseType = "arraybuffer";
+    xhr.onload = function () {
+      var params = {};
+      params.wasmBinary = xhr.response;
+      // params.onRuntimeInitialized = _onRuntimeInitialized;
+      Module = window["effekseer_native"];
+      _onRuntimeInitialized();
+    };
+    xhr.onerror = function () {
+      _onerrorAssembly();
+    };
+    xhr.send(null);
+  };
 ```
