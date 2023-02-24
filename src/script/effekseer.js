@@ -189,10 +189,8 @@ var effekseer = function () {
       var params = {};
       params.wasmBinary = xhr.response;
       // params.onRuntimeInitialized = _onRuntimeInitialized;
-      effekseer_nativeLib(params).then(function (module) {
-        Module = module;
-        _onRuntimeInitialized();
-      });
+      Module = window["effekseer_native"];
+      _onRuntimeInitialized();
     };
     xhr.onerror = function () {
       _onerrorAssembly();

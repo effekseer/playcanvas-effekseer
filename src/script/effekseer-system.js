@@ -15,6 +15,11 @@ effekseerWasmLoaded = false;
 if(effekseerWasmAssets.length > 0)
 {
     effekseer.setImageCrossOrigin("anonymous");
+
+    pc.WasmModule.getInstance("effekseer_native", (instance) => {
+        window["effekseer_native"] = instance;
+    });
+    
     effekseer.initRuntime(effekseerWasmAssets[0].getFileUrl(), () => {
         var gl = pc.Application.getApplication().graphicsDevice.gl;
         
